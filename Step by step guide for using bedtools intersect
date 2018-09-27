@@ -1,0 +1,40 @@
+NOTE: Make sure the OS that these commands are being tested on have enough RAM, 5gb seems to function properly
+as these commands can be potentially killed if there isn't sufficient space.
+
+After the files have been downloaded, the next step is to save them as a bed file. The following commands 
+are used to download them, save them as a bed file, and using awk to get the columns necessary for the bedfile
+$2 column is the name of the chromosome
+$3 column is the start position-1
+$4 column is the end position
+$1 column is the name of the protein
+$5 column is the position of the strand
+gzip -cd matches.txt.gz | awk {'print $2"\t"$3-1"\t"$4"\t"$1"\t"".""\t"$5'} > matches.bed
+
+This command is for the cosmic file. One difference is that all the information will be stored within
+one column. Another note is that this bed file will contain variants for leukaemia, as this is how the file
+writes the name
+gzip -cd CosmicNCV.tsv.gz | grep leukaemia | awk 'BEGIN{FS="\t"}{print $15}' | sed 's/:/\t/g' | sed 's/-/\t/g'
+
+Make sure to run the head command to make sure the bed files extracted the correct columns
+
+Once the bed files have been created, the next step is to use the intersect command using bedtools
+The user would need to install bedtools, and depending on the OS being used, the commands will change
+This link provides a great example on how to install bedtools every command it offers
+https://bedtools.readthedocs.io/en/latest/content/installation.html
+
+Once bedtools has been installed, run the intersect command for the matches and cosmic bed files 
+created earlier. 
+bedtools intersect -u -a matches.bed -b cosmic.bed | head -10
+The head command is used to make sure that the command was executed succesfullly.
+If the command is working properly, you may save it as a bed file that will be used for future bedtools executions
+bedtools intersect -u -a matches.bed -b cosmic.bed > overlap.bed
+
+After these files have been created, the next is to sort out the proteins that are affected in each area.
+This will give a count of the main proteins that could be increasing the chance of Leukemia occurring.
+The following commands 
+cat matches.bed | awk {'split($4, arr, "_");print arr[1]'} | sort -k1,1 | uniq -c | sort -n -k1,1 -r
+This command will split the proteins by removing the _ character and the number associated next to the
+underscore. 
+cat overlap.bed | awk {'split($4, arr, "_");print arr[1]'} | sort -k1,1 | uniq -c | sort -n -k1,1 -r
+A similar command is used for the overlap bed file.
+
