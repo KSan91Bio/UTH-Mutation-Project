@@ -18,6 +18,9 @@ writes the name
 gzip -cd CosmicNCV.tsv.gz | grep leukaemia | awk 'BEGIN{FS="\t"}{print $15}' /
 | sed 's/^/chr/g' | sed 's/:/\t/g' | sed 's/-/\t/g' > cosmic.bed
 Make sure to run the head command to make sure the bed files extracted the correct columns
+Run this command to subtract 1 from the start position to match the condition of the matches bed file.
+Then save it as another bed file
+awk '{print $1"\t"$2-1"\t"$3}' cosmic.bed | head -10
 
 Once the bed files have been created, the next step is to use the intersect command using bedtools
 The user would need to install bedtools, and depending on the OS being used, the commands will change
@@ -26,10 +29,12 @@ https://bedtools.readthedocs.io/en/latest/content/installation.html
 
 Once bedtools has been installed, run the intersect command for the matches and cosmic bed files 
 created earlier. 
-bedtools intersect -u -a matches.bed -b cosmic.bed | head -10
+bedtools intersect -u -a matches.bed -b L_cosmic.bed | head -10
+or
+intersectBed -u -a matches.bed -b L_cosmic.bed | head -10
 The head command is used to make sure that the command was executed succesfullly.
 If the command is working properly, you may save it as a bed file that will be used for future bedtools executions
-bedtools intersect -u -a matches.bed -b cosmic.bed > overlap.bed
+bedtools intersect -u -a matches.bed -b L_cosmic.bed > overlap.bed
 
 After these files have been created, the next is to sort out the genes that are affected in each area.
 This will give a count of the main proteins that could be increasing the chance of Leukemia occurring.
