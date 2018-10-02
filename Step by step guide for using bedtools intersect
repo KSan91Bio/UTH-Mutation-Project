@@ -10,11 +10,13 @@ $1 column is the name of the protein
 $5 column is the position of the strand
 gzip -cd matches.txt.gz | awk {'print $2"\t"$3-1"\t"$4"\t"$1"\t"".""\t"$5'} > matches.bed
 
+One note about the cosmic file: make you are aware of the version being used. Ensure this to maintain consistency.
+For this project, we will be using Grch37 to maintain consistenct with the matches file as it also uses Grch37
 This command is for the cosmic file. One difference is that all the information will be stored within
 one column. Another note is that this bed file will contain variants for leukaemia, as this is how the file
 writes the name
-gzip -cd CosmicNCV.tsv.gz | grep leukaemia | awk 'BEGIN{FS="\t"}{print $15}' | sed 's/:/\t/g' | sed 's/-/\t/g'
-
+gzip -cd CosmicNCV.tsv.gz | grep leukaemia | awk 'BEGIN{FS="\t"}{print $15}' /
+| sed 's/^/chr/g' | sed 's/:/\t/g' | sed 's/-/\t/g' > cosmic.bed
 Make sure to run the head command to make sure the bed files extracted the correct columns
 
 Once the bed files have been created, the next step is to use the intersect command using bedtools
@@ -29,7 +31,7 @@ The head command is used to make sure that the command was executed succesfullly
 If the command is working properly, you may save it as a bed file that will be used for future bedtools executions
 bedtools intersect -u -a matches.bed -b cosmic.bed > overlap.bed
 
-After these files have been created, the next is to sort out the proteins that are affected in each area.
+After these files have been created, the next is to sort out the genes that are affected in each area.
 This will give a count of the main proteins that could be increasing the chance of Leukemia occurring.
 The following commands 
 cat matches.bed | awk {'split($4, arr, "_");print arr[1]'} | sort -k1,1 | uniq -c | sort -n -k1,1 -r
@@ -37,4 +39,11 @@ This command will split the proteins by removing the _ character and the number 
 underscore. 
 cat overlap.bed | awk {'split($4, arr, "_");print arr[1]'} | sort -k1,1 | uniq -c | sort -n -k1,1 -r
 A similar command is used for the overlap bed file.
+
+Make sure to create a text file for each of the commands written as they will be used for the next step
+In this step, we will try to find the number of times a motif got hit from the overlap file created from the bedtools
+intersect, and divide it by the number of motifs coming from the original matches bed file. 
+paste abc_overlap_sort_L.txt abc_matches_sort.txt | awk '{print $2,$1/$3}' | wc
+This command will paste the files created previously. Then the awk command is used to print out the first column and 
+the second column prints out the solution of the division. The wc is used to 
 
