@@ -45,10 +45,17 @@ underscore.
 cat overlap.bed | awk {'split($4, arr, "_");print arr[1]'} | sort -k1,1 | uniq -c | sort -n -k1,1 -r
 A similar command is used for the overlap bed file.
 
+After the files are created, the next step is to sort the files alphabetically. This is to ensure consistency between the files
+This command will sort the matches file
+sort -k2,2 matches_sorted.txt > abc_matches_sorted.txt
+This command will sort the overlap file
+sort -k2,2 L_overlap_sorted.txt > abc_L_overlap_sorted.txt
+
 Make sure to create a text file for each of the commands written as they will be used for the next step
 In this step, we will try to find the number of times a motif got hit from the overlap file created from the bedtools
 intersect, and divide it by the number of motifs coming from the original matches bed file. 
 paste abc_overlap_sort_L.txt abc_matches_sort.txt | awk '{print $2,$1/$3}' | wc
 This command will paste the files created previously. Then the awk command is used to print out the first column and 
-the second column prints out the solution of the division. The wc is used to 
+the second column prints out the solution of the division. The wc is used to make sure that the lines remain consistent
+
 
