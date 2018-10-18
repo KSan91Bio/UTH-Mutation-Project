@@ -12,7 +12,7 @@ for r in range(2):
     trial_list = []
     random.seed()
     ran_pos = int(random.random()*2000 - 1000)
-    with open("matchestest.txt", "r") as m:
+    with open("matchestest1.txt", "r") as m:
         matches = m.readlines()
         for line in matches:
             chromo = str(line.split("\t")[0])
@@ -31,21 +31,25 @@ for r in range(2):
             intersecttrial = (a.intersect(b, u=True, stream = True))
             for trial_total in intersecttrial:
                 trial_list.append(trial_total.name)
-                total_list.append(trial_total.name)  
+                total_list.append(trial_total.name) 
+                #if (r == 2):
+                    #average_list.append(trial_total.name) 
             trial_unique, trial_counts = numpy.unique(trial_list, return_counts = True)
             trial_result = dict(zip(trial_unique, trial_counts))
             unique, counts =  numpy.unique(total_list, return_counts = True)
             results = dict(zip(unique,counts))
+            #average_unique, average_counts = numpy.unique(average_list, return_counts = True)
+            #average_results = dict(zip(average_unique, average_counts / r))
         #print (trial_result)
             #print (intersecttrial)
-            #print (intersect)
-            #for count_total in trial_result:
-                #total_list.append(count_total)    
-        #unique, counts =  numpy.unique(total_list, return_counts = True)
-        #results = dict(zip(unique,counts))
-        #if r == 2:
-            #average = average_list.append(total_list()/len(r))
+    #if r == 2:
+        #for average_total in results:
+            #aver = average_list.append[average_total] / r
+            #average_unique, average_counts = numpy.unique(average_total, return_counts = True)
+            #grand = dict(zip(average_unique,average_counts))
+                #average = results.append(total_list()/len(r))
         
         print(trial_result)
+#print (average_result)
 print (results)
-#print (average)
+#print (average_results)
