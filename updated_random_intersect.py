@@ -9,6 +9,7 @@ count_list = []
 total_list = []
 average_list = []
 sorted_list = []
+token_list = []
 
 print('Loading variants.\n')
 b = pybedtools.BedTool('cosmicchr1.bed').sort()
@@ -16,11 +17,20 @@ print('Loaded '+str(b.count()))
 
 num_trials = 10
 max_rand_shift = 1000
+pre_test= ""
 
 print('Loading matches.\n')
-with open("matches_chr1.txt", "r") as m:
+with open("matchestest.txt", "r") as m:
     matches = m.readlines()
-
+    for line in matches:
+        tokens=line.split('\t')
+#         chromo = tokens[0]
+#         start = int(tokens[1])
+#         end=int(tokens[2])
+#         name=tokens[3]
+        #pre_test = pre_test + str(token_list)
+        token_list.append(tokens)
+        
 print('Loaded '+str(len(matches))+' motifs.')
     
 
@@ -38,7 +48,7 @@ for r in range(num_trials):
     print('Shifting and randomizing the regions.')
 
     n_line=0
-    for line in matches:
+    for modify in token_list:
     #while line:
         #print(line)
         #chromo = str(line.split("\t")[0])
@@ -46,11 +56,16 @@ for r in range(num_trials):
         #end = int(line.split("\t")[2])
         #name = str(line.split("\t")[3])
 
-        tokens=line.split('\t')
-        chromo = tokens[0]
-        start = int(tokens[1])
-        end=int(tokens[2])
-        name=tokens[3]
+        #tokens=line.split('\t')
+        #chromo = tokens[0]
+        #start = int(tokens[1])
+        #end=int(tokens[2])
+        #name=tokens[3]
+        
+        chromo = modify[0]
+        start = int(modify[1])
+        end=int(modify[2])
+        name=modify[3]
         
         start_s = ran_pos + start
         start_e = ran_pos + end
@@ -93,7 +108,7 @@ for r in range(num_trials):
         #print (intersecttrial)
     print(trial_result)
 
-print ("\n Total results of the trials: \n", results)
+print ("\nTotal results of the trials: \n", results)
 print ("\nAverage results of the trials: \n", average_results)
 
 average_sorted = sorted(average_results.items(), key=operator.itemgetter(1),reverse=True)
