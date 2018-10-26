@@ -14,10 +14,10 @@ token_list = []
 iteration_list = ""
 
 print ('Loading matches.\n')
-b = pybedtools.BedTool('matcheschr1.txt')
+b = pybedtools.BedTool('matches_chr1.txt')
 print ('Loaded ' + str(b.count()))
 
-num_trials = 1
+num_trials = 2
 max_rand_shift = 1000
 
 print ('Loading variants.\n')
@@ -57,26 +57,26 @@ for r in range(num_trials):
         start_s = ran_pos + start
         start_e = ran_pos + end
         #randomized = randomized + "\n" + str(chromo) + "\t" + str(start_s) + "\t" + str(start_e) + "\t" + "trial: " + str(r+1)
-        randomized = randomized + str(chromo) + "\t" + str(start_s) + "\t" + str(start_e) + "\t" + "trial:" + str(r+1) + "\t"
-        #iteration_list = iteration_list + randomized
+        randomized = str(chromo) + "\t" + str(start_s) + "\t" + str(start_e) + "\t" + "trial:" + str(r+1) + "\t"
+        iteration_list = iteration_list + randomized
         #randomized_combined += int(randomized[modify])
 #         if n_line % 1000 == 0:
 #             print ('Processed ' + str(n_line))
 #         n_line+=1
         
-print (randomized)
-print (iteration_list)
+#print (randomized)
+#print (iteration_list)
 #print (randomized_combined)
 print ('Creating bedtool object from randomized regions.\n')
 RanIntersect = BedTool(iteration_list, from_string = True)
 #print (RanIntersect)
-# print ('Creating pybedtools object from the regions.')
-# a = pybedtools.BedTool(RanIntersect)
-
+print ('Creating pybedtools object from the regions.')
+a = pybedtools.BedTool(RanIntersect)
+#print (a)
 # print ('Created ' + str(a.count()) + ' regions.')
 
-# print ('Intersecting regions.\n')
-# Intersecttrial = (a.intersect(b, u=True, stream=True))
+print ('Intersecting regions.\n')
+Intersecttrial = (b.intersect(a, u=True, stream=True))
 
 # print ('Processing intersections.\n')
-# print (Intersecttrial)
+print (Intersecttrial)
