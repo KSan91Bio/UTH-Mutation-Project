@@ -9,6 +9,9 @@ $4 column is the end position
 $1 column is the name of the protein
 $5 column is the position of the strand
 gzip -cd matches.txt.gz | awk {'print $2"\t"$3-1"\t"$4"\t"$1"\t"".""\t"$5'} > matches.bed
+In the case that the file proves to be too large, one suggestion can be to split the file according to chromosomes.
+The following command can be used to specify a chromosome
+awk {'if($1=="chr10") print $0'} matches.bed > matches_chr10.txt
 
 One note about the cosmic file: make you are aware of the version being used. Ensure this to maintain consistency.
 For this project, we will be using Grch37 to maintain consistenct with the matches file as it also uses Grch37
