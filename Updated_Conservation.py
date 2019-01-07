@@ -1,4 +1,4 @@
-import numpy as np
+import numpy
 import pandas as pd
 import operator
 from operator import itemgetter
@@ -7,11 +7,11 @@ from collections import OrderedDict
 
 name_counts = []
 
-num_trials = 1
+num_trials = 20
 
 print ('Loading overlaps.\n')
-#fc = open("4_1000_genomes_conserve_average.txt", "w")
-with open("3_1000_genomes_conserve_motif_overlap_filter.txt", "r") as o:
+fc = open("4rand_avg_leukemia_conserve_average.txt", "w")
+with open("3rand_leukemia_conserve_motif_overlap_filter.txt", "r") as o:
     overlaps = o.readlines()
     for line in overlaps:
         trial = line.split('\t')[0]
@@ -39,7 +39,7 @@ for r in range(num_trials):
 #             value = line.split(' ')[1]
 #             gene_name.append(nameg)
     print ('Running '+str(r+1)+' iteration.\n')
-    #fc.write ('\nRunning '+str(r+1)+' iteration.\n')
+    fc.write ('\nRunning '+str(r+1)+' iteration.\n')
     
     
     print ('Getting names and conservation values')
@@ -84,15 +84,11 @@ for r in range(num_trials):
 #     print (fc_conserve)
     #fc_conserve = "\n".join(str(s) for s in conserve_sort)
     #c = "\n".join(str(i) for i in protein_result)
-    print (*conserve_sort, sep= "\n")
+    #print (*conserve_sort, sep= "\n")
     #fc.write(fc_conserve)
-    print ('\nend program')
-    #fc.close()
-# fc = open("4_1000_genomes_conserve_average.txt", "w")
-# fc.write ('\nRunning '+str(r+1)+' iteration.\n')
-# c = "\n".join(str(i) for i in conserve_sort)
-# # fc.write (str(c))
+    print ('\nend iteration')
 # df = pd.DataFrame({'gene': conserve_sort})
-# print (str(df))
-# fc.write(df.to_string())
-# conserve_sort
+    df = pd.DataFrame({'gene': average_conserve})
+    print (str(df))
+    fc.write(df.to_string())
+fc.close()
